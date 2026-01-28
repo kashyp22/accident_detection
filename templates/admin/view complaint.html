@@ -1,0 +1,88 @@
+
+{% extends 'admin/admin_index1.html' %}
+{% block body %}
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Ambulance</title>
+  <style>
+
+    h2 {
+      text-align: center;
+      color: #ffd700; /* Gold accent */
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #2b2b3c;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background: #3a3a4d;
+      color: #ffd700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    tr:nth-child(even) {
+      background: #242433;
+    }
+    tr:hover {
+      background: #38384d;
+      transition: 0.3s;
+    }
+    a {
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 0 3px;
+      display: inline-block;
+    }
+    a.accept {
+      background: #28a745;
+      color: white;
+    }
+    a.accept:hover {
+      background: #218838;
+    }
+    a.reject {
+      background: #dc3545;
+      color: white;
+    }
+    a.reject:hover {
+      background: #b52a37;
+    }
+  </style>
+</head>
+<body>
+  <h2>View Complaint</h2>
+  <table>
+    <tr>
+      <th>User</th>
+      <th>Complaint</th>
+      <th>Date</th>
+      <th>Reply</th>
+      <th></th>
+    </tr>
+      {% for i in data %}
+    <tr>
+      <td>{{ i.LOGIN.first_name }}</td>
+      <td>{{ i.complaint }} </td>
+      <td>{{ i.date }}</td>
+      <td>{{ i.reply }}</td>
+      <td><a href="/myapp/sendReply/{{ i.id }}/#user">reply</a></td>
+    </tr>
+      {% endfor %}
+  </table>
+</body>
+{% endblock %}
+</html>

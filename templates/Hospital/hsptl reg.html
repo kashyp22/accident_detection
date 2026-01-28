@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Registration</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f9ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #003366;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-group input[type="file"] {
+            border: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #0078d7;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #005bb5;
+        }
+        #map {
+            height: 250px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hospital Registration</h2>
+        <form action="/myapp/reg_post/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Hospital Name</label>
+        <!-- Only letters and spaces allowed -->
+        <input type="text" id="name" name="hospital_name"
+               pattern="[A-Za-z\s]{3,}"
+               title="Hospital name must contain only letters and spaces, min 3 characters"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone No</label>
+        <!-- 10-digit phone number -->
+        <input type="tel" id="phone" name="phone"
+               pattern="[0-9]{10}"
+               title="Enter a valid 10-digit phone number"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email ID</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="place">Place</label>
+        <!-- Only letters and spaces -->
+        <input type="text" id="place" name="place"
+               pattern="[A-Za-z\s]{2,}"
+               title="Place must contain only letters and spaces"
+               required>
+    </div>
+
+{#    <div class="form-group">#}
+{#        <label for="post">Post</label>#}
+{#        <!-- Letters only -->#}
+{#        <input type="text" id="post" name="post"#}
+{#               pattern="[A-Za-z\s]{2,}"#}
+{#               title="Post must contain only letters and spaces"#}
+{#               required>#}
+{#    </div>#}
+
+    <div class="form-group">
+        <label for="district">District</label>
+        <!-- Letters only -->
+        <input type="text" id="district" name="district"
+               pattern="[A-Za-z\s]{2,}"
+               title="District must contain only letters and spaces"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="logo">Upload Logo</label>
+        <input type="file" id="logo" name="logo" accept="image/*" required>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Create Username</label>
+        <!-- Alphanumeric, min 5 chars -->
+        <input type="text" id="username" name="username"
+               pattern="[A-Za-z0-9]{5,}"
+               title="Username must be at least 5 characters, letters and numbers only"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Create Password</label>
+        <!-- At least 8 characters -->
+        <input type="password" id="password" name="password"
+               pattern=".{8,}"
+               title="Password must be at least 8 characters long"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="pincode">Pin Code</label>
+        <!-- 6-digit Indian PIN -->
+        <input type="text" id="pincode" name="post"
+               pattern="[0-9]{6}"
+               title="Enter a valid 6-digit PIN code"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label>Select Location on Map</label>
+        <div id="map"></div>
+    </div>
+
+    <div class="form-group">
+        <label for="latitude">Latitude</label>
+        <input type="text" id="latitude" name="latitude" readonly required>
+    </div>
+
+    <div class="form-group">
+        <label for="longitude">Longitude</label>
+        <input type="text" id="longitude" name="longitude" readonly required>
+    </div>
+
+    <button type="submit" class="btn">Register</button>
+</form>
+{#        <form action="/myapp/reg_post/" method="post" enctype="multipart/form-data">#}
+{#            {% csrf_token %}#}
+{#            <div class="form-group">#}
+{#                <label for="name">Hospital Name</label>#}
+{#                <input type="text" id="name" name="hospital_name" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="phone">Phone No</label>#}
+{#                <input type="tel" id="phone" name="phone" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="email">Email ID</label>#}
+{#                <input type="email" id="email" name="email" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="place">Place</label>#}
+{#                <input type="text" id="place" name="place" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="post">Post</label>#}
+{#                <input type="text" id="post" name="post" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="district">District</label>#}
+{#                <input type="text" id="district" name="district" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="logo">Upload Logo</label>#}
+{#                <input type="file" id="logo" name="logo" accept="image/*" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="username">Create Username</label>#}
+{#                <input type="text" id="username" name="username" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="password">Create Password</label>#}
+{#                <input type="password" id="password" name="password" required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label>Select Location on Map</label>#}
+{#                <div id="map"></div>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="latitude">Latitude</label>#}
+{#                <input type="text" id="latitude" name="latitude" readonly required>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="longitude">Longitude</label>#}
+{#                <input type="text" id="longitude" name="longitude" readonly required>#}
+{#            </div>#}
+{##}
+{#            <button type="submit" class="btn">Register</button>#}
+{#        </form>#}
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map centered on a default location (e.g., a generic point; adjust as needed)
+        const map = L.map('map').setView([20.5937, 78.9629], 5); // Default to India center
+
+        // Add OpenStreetMap tiles (no API key required)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add click event to capture coordinates
+        map.on('click', function(e) {
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+
+            // Optional: Add a marker at the clicked location
+            if (map._layers['marker']) {
+                map.removeLayer(map._layers['marker']);
+            }
+            L.marker(e.latlng).addTo(map)
+                .bindPopup(`Selected: ${lat}, ${lng}`)
+                .openPopup();
+        });
+    </script>
+</body>
+</html>

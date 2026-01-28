@@ -1,0 +1,87 @@
+
+{% extends 'admin/admin_index1.html' %}
+{% block body %}
+<head>
+  <meta charset="UTF-8">
+  <title>CHANGE PASSWORD</title>
+  <style>
+
+
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      width: 350px;
+      text-align: center;
+    }
+
+    .container h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      text-align: left;
+      font-size: 14px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="password"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 5px rgba(102,126,234,0.5);
+    }
+
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Change Password</h2>
+    <form method="post" action="/myapp/admin_change_password_post/">{% csrf_token %}
+      <label for="currentpas">Current Password</label>
+      <input type="password" id="currentpas" name="old">
+
+      <label for="newpas">New Password</label>
+      <input type="password" id="newpas" name="new">
+
+      <label for="repeat">Repeat Password</label>
+      <input type="password" id="repeat" >
+
+      <button type="submit">Change Password</button>
+    </form>
+  </div>
+</body>
+{% endblock %}
+</html>
+    

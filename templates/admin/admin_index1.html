@@ -1,0 +1,361 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - Accident Detection AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/admin/assets/admin.css" />
+</head>
+<body data-theme="dark">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">AI</div>
+      <span class="brand">Admin Panel</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/myapp/admin_homepage/" class="nav-item active" data-page="home">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="/myapp/view_user/#user" class="nav-item" data-page="users">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>View Users</span>
+      </a>
+      <a href="/myapp/view_rating/#user" class="nav-item" data-page="ratings">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>View Ratings</span>
+      </a>
+      <a href="/myapp/admin_view_complaint/#user" class="nav-item" data-page="complaints">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Complaints</span>
+      </a>
+      <a href="/myapp/verify_hosp/#user" class="nav-item" data-page="verify-hospital">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span>Verify Hospital</span>
+      </a>
+      <a href="/myapp/verify_ambulance/#user" class="nav-item" data-page="verify-ambulance">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span>Verify Ambulance</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/myapp/change_password/#user" class="nav-item" id="btn-change-password">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Change Password</span>
+      </a>
+      <a href="/myapp/login" class="nav-item logout" id="btn-logout">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-right">
+        <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+          <svg class="sun-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <div class="admin-profile">
+          <div class="avatar">A</div>
+          <span class="admin-name">Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Pages Container -->
+    <div class="content-area">
+      <!-- Home Page -->
+      <section class="page active" id="page-home">
+        <h1>Dashboard Overview</h1>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon users">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-users">1,247</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon incidents">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-incidents">342</div>
+              <div class="stat-label">Incidents Detected</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon hospitals">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-hospitals">58</div>
+              <div class="stat-label">Verified Hospitals</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ambulances">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-ambulances">124</div>
+              <div class="stat-label">Active Ambulances</div>
+            </div>
+          </div>
+        </div>
+
+{#        <div class="recent-activity">#}
+{#          <h2>Recent Activity</h2>#}
+{#          <div class="activity-list">#}
+{#            <div class="activity-item">#}
+{#              <div class="activity-icon new">📍</div>#}
+{#              <div class="activity-text">#}
+{#                <strong>New incident detected</strong> at Highway 45, Sector 12#}
+{#                <span class="activity-time">2 minutes ago</span>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="activity-item">#}
+{#              <div class="activity-icon verify">✓</div>#}
+{#              <div class="activity-text">#}
+{#                <strong>Hospital verified</strong> - City General Hospital#}
+{#                <span class="activity-time">15 minutes ago</span>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="activity-item">#}
+{#              <div class="activity-icon user">👤</div>#}
+{#              <div class="activity-text">#}
+{#                <strong>New user registered</strong> - John Doe#}
+{#                <span class="activity-time">1 hour ago</span>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+          <div id="user">
+              {% block body %}
+              
+              {% endblock %}
+          </div>
+      </section>
+
+      <!-- View Users Page -->
+      <section class="page" id="page-users">
+        <div class="page-header">
+          <h1>Manage Users</h1>
+          <div class="page-actions">
+            <input type="search" placeholder="Search users..." class="search-input" id="search-users" />
+            <button class="btn btn-primary">Add User</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="users-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content populated by JS -->
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="users-pagination"></div>
+      </section>
+
+      <!-- View Ratings Page -->
+      <section class="page" id="page-ratings">
+        <div class="page-header">
+          <h1>User Ratings & Feedback</h1>
+          <div class="page-actions">
+            <input type="search" placeholder="Search ratings..." class="search-input" id="search-ratings" />
+            <select class="filter-select">
+              <option value="all">All Ratings</option>
+              <option value="5">5 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="2">2 Stars</option>
+              <option value="1">1 Star</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="ratings-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Service</th>
+                <th>Rating</th>
+                <th>Feedback</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content -->
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="ratings-pagination"></div>
+      </section>
+
+      <!-- Complaints Page -->
+      <section class="page" id="page-complaints">
+        <div class="page-header">
+          <h1>Complaints Management</h1>
+          <div class="page-actions">
+            <input type="search" placeholder="Search complaints..." class="search-input" id="search-complaints" />
+            <select class="filter-select">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="complaints-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Subject</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content -->
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="complaints-pagination"></div>
+      </section>
+
+      <!-- Verify Hospital Page -->
+      <section class="page" id="page-verify-hospital">
+        <div class="page-header">
+          <h1>Verify Hospitals</h1>
+          <div class="page-actions">
+            <input type="search" placeholder="Search hospitals..." class="search-input" id="search-hospitals" />
+            <select class="filter-select">
+              <option value="all">All</option>
+              <option value="pending">Pending Verification</option>
+              <option value="verified">Verified</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="hospitals-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Hospital Name</th>
+                <th>Location</th>
+                <th>Contact</th>
+                <th>Beds Available</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content -->
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="hospitals-pagination"></div>
+      </section>
+
+      <!-- Verify Ambulance Page -->
+      <section class="page" id="page-verify-ambulance">
+        <div class="page-header">
+          <h1>Verify Ambulances</h1>
+          <div class="page-actions">
+            <input type="search" placeholder="Search ambulances..." class="search-input" id="search-ambulances" />
+            <select class="filter-select">
+              <option value="all">All</option>
+              <option value="pending">Pending Verification</option>
+              <option value="verified">Verified</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="ambulances-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Vehicle No.</th>
+                <th>Driver Name</th>
+                <th>Contact</th>
+                <th>Hospital</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content -->
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="ambulances-pagination"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Change Password Modal -->
+  <div class="modal" id="modal-change-password">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Change Password</h2>
+        <button class="modal-close" data-modal="modal-change-password">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-change-password">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" class="form-input" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-modal="modal-change-password">Cancel</button>
+            <button type="submit" class="btn btn-primary">Update Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+</body>
+</html>

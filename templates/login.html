@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dark Mode Auth – Inspired by Dribbble</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #1e1e1e;
+      width: 360px;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-weight: 500;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 15px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 14px 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .link {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+      color: #667eea;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+    .hidden {
+      display: none;
+    }
+    .toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #667eea;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .error {
+      color: #ff4c4c;
+      margin-top: 8px;
+      font-size: 14px;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <form id="loginForm">
+      <h2>Sign In</h2>
+      <div class="form-group">
+        <input type="text" id="loginUsername" placeholder="Username" required />
+      </div>
+      <div class="form-group">
+        <input type="password" id="loginPassword" placeholder="Password" required />
+      </div>
+      <p class="error" id="loginError">Incorrect username or password</p>
+      <button type="submit">Sign In</button>
+      <a class="link" id="toReset">Forgot Password?</a>
+      <a class="link" id="toSignup">Sign Up</a>
+    </form>
+
+    <form id="resetForm" class="hidden">
+      <h2>Reset Password</h2>
+      <div class="form-group">
+        <input type="email" id="resetEmail" placeholder="Enter your email" required/>
+      </div>
+      <button type="submit">Send Reset Link</button>
+      <a class="link" id="backToLoginFromReset">Back to Sign In</a>
+    </form>
+
+    <form id="signupForm" class="hidden">
+      <h2>Sign Up</h2>
+      <div class="form-group">
+        <input type="text" id="signupUsername" placeholder="Username" required/>
+      </div>
+      <div class="form-group">
+        <input type="email" id="signupEmail" placeholder="Email" required/>
+      </div>
+      <div class="form-group">
+        <input type="password" id="signupPassword" placeholder="Password" required/>
+      </div>
+      <button type="submit">Register</button>
+      <a class="link" id="backToLoginFromSignup">Back to Sign In</a>
+    </form>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const resetForm = document.getElementById('resetForm');
+    const signupForm = document.getElementById('signupForm');
+    const loginError = document.getElementById('loginError');
+
+    document.getElementById('toReset').onclick = () => toggleForms('reset');
+    document.getElementById('toSignup').onclick = () => toggleForms('signup');
+    document.getElementById('backToLoginFromReset').onclick = () => toggleForms('login');
+    document.getElementById('backToLoginFromSignup').onclick = () => toggleForms('login');
+
+    function toggleForms(form) {
+      loginForm.classList.add('hidden');
+      resetForm.classList.add('hidden');
+      signupForm.classList.add('hidden');
+      if (form === 'login') loginForm.classList.remove('hidden');
+      else if (form === 'reset') resetForm.classList.remove('hidden');
+      else if (form === 'signup') signupForm.classList.remove('hidden');
+      loginError.style.display = 'none';
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('loginUsername').value;
+      const p = document.getElementById('loginPassword').value;
+      if (u === 'admin' && p === '1234') {
+        alert('Signed In successfully!');
+      } else {
+        loginError.style.display = 'block';
+      }
+    });
+
+    resetForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Reset link sent!');
+      toggleForms('login');
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Registered successfully! You can now sign in.');
+      toggleForms('login');
+    });
+  </script>
+</body>
+</html>

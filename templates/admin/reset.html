@@ -1,0 +1,84 @@
+
+{% extends 'admin/admin_index1.html' %}
+{% block body %}
+<head>
+    <title>Reset Password</title>
+    <style>
+
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            text-align: left;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(37,117,252,0.5);
+        }
+
+        button {
+            background: #2575fc;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #6a11cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RESET PASSWORD</h1>
+        <form>
+            <label for="current">Current Password:</label>
+            <input type="password" id="current" name="current"><br>
+            
+            <label for="new">New Password:</label>
+            <input type="password" id="new" name="new"><br>
+            
+            <label for="confirm">Confirm Password:</label>
+            <input type="password" id="confirm" name="confirm"><br>
+            
+            <button type="submit">RESET</button>
+        </form>
+    </div>
+</body>
+{% endblock %}
+</html>

@@ -1,0 +1,82 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+
+
+{% extends 'admin/admin_index1.html' %}
+{% block body %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataTable Example</title>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+  <div style="width: 80%; margin: 50px auto;">
+    <h2>Dummy Data Table with Search</h2>
+    <table id="myTable" class="display" style="width:100%">
+
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Alice Johnson</td>
+          <td>alice@example.com</td>
+          <td>123-456-7890</td>
+          <td>New York</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Bob Smith</td>
+          <td>bob@example.com</td>
+          <td>555-222-1111</td>
+          <td>Los Angeles</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Charlie Brown</td>
+          <td>charlie@example.com</td>
+          <td>777-333-9999</td>
+          <td>Chicago</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Diana Prince</td>
+          <td>diana@example.com</td>
+          <td>888-444-6666</td>
+          <td>Houston</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Edward Norton</td>
+          <td>edward@example.com</td>
+          <td>111-999-5555</td>
+          <td>Miami</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $("#myTable").DataTable();
+    });
+  </script>
+</body>
+{% endblock %}

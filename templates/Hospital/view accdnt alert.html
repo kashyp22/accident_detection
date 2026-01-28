@@ -1,0 +1,36 @@
+
+{% extends 'Hospital/hospital_index.html' %}
+{% block body %}
+<head>
+  <meta charset="UTF-8">
+  <title>View Accident Alerts</title>
+</head>
+<body>
+  <h2>View Accident Alerts</h2>
+  
+  <table class="table table-hover">
+    <tr>
+      <th>Alert</th>
+      <th>Date</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>User</th>
+      <th>Ambulance</th>
+      <th>Actions</th>
+    </tr>
+   
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td class="actions">
+        <a href="/myapp/add_medicalreport/{{ i.id }}/" class="btn btn-success">Report</a>
+        <a href="chat.html" class="btn btn-primary">Chat</a>
+      </td>
+    </tr>
+  </table>
+</body>
+{% endblock %}

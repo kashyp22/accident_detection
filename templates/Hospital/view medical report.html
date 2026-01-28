@@ -1,0 +1,90 @@
+
+{% extends 'Hospital/hospital_index.html' %}
+{% block body %}
+<head>
+  <meta charset="UTF-8">
+  <title>View Medical Reports</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f9ff;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #0078d7;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .btn-edit {
+      background: #28a745;
+    }
+    .btn-edit:hover {
+      background: #1e7e34;
+    }
+
+    .btn-delete {
+      background: #d9534f;
+    }
+    .btn-delete:hover {
+      background: #b52b27;
+    }
+  </style>
+</head>
+<body>
+  <h2>View Medical Reports</h2>
+  
+  <table>
+    <tr>
+      <th>Sl. No</th>
+      <th>Report</th>
+      <th>Date</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><button class="btn btn-edit">Edit</button></td>
+      <td><button class="btn btn-delete">Delete</button></td>
+    </tr>
+  </table>
+</body>
+{% endblock %}
