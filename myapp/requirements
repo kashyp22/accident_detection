@@ -1,0 +1,15 @@
+# Requirements for Accident Detection with DETR
+
+# Core dependencies
+torch>=2.0.0
+torchvision>=0.15.0
+transformers>=4.30.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Optional but recommended
+numpy>=1.24.0
+timm>=0.9.0  # Required by some vision transformers
+
+# For GPU support (optional - install separately if needed)
+# torch with CUDA: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Profile</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0078d7 0%, #005bb5 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .profile-content {
+            padding: 40px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-section img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #0078d7;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #0078d7;
+        }
+
+        .info-item label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item .value {
+            font-size: 16px;
+            color: #222;
+            word-wrap: break-word;
+        }
+
+        .map-section {
+            margin-top: 30px;
+        }
+
+        .map-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 20px;
+        }
+
+        #profileMap {
+            height: 350px;
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #0078d7;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #005bb5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,120,215,0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108,117,125,0.3);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                padding: 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hospital Profile</h1>
+            <p>View and manage your hospital information</p>
+        </div>
+
+        <div class="profile-content">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                {% if hospital.logo %}
+                    <img src="/media/{{ hospital.logo }}" alt="{{ hospital.name }} Logo">
+                {% else %}
+                    <img src="https://via.placeholder.com/150?text=No+Logo" alt="No Logo">
+                {% endif %}
+            </div>
+
+            <!-- Hospital Information Grid -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Hospital Name</label>
+                    <div class="value">{{ hospital.name }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Phone Number</label>
+                    <div class="value">{{ hospital.phone }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Email Address</label>
+                    <div class="value">{{ hospital.email }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Place</label>
+                    <div class="value">{{ hospital.place }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Pin Code</label>
+                    <div class="value">{{ hospital.post }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>District</label>
+                    <div class="value">{{ hospital.district }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Latitude</label>
+                    <div class="value">{{ hospital.latitude }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Longitude</label>
+                    <div class="value">{{ hospital.longitude }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Status</label>
+                    <div class="value">
+                        {% if hospital.status == 'active' or hospital.status == 'Active' %}
+                            <span class="status-badge status-active">Active</span>
+                        {% else %}
+                            <span class="status-badge status-inactive">{{ hospital.status }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Section -->
+            <div class="map-section">
+                <h3>📍 Hospital Location</h3>
+                <div id="profileMap"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/myapp/hospital_edit_profile/" class="btn btn-primary">Edit Profile</a>
+                <a href="/myapp/hos_home/" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map with hospital location
+        const latitude = {{ hospital.latitude }};
+        const longitude = {{ hospital.longitude }};
+
+        const map = L.map('profileMap').setView([latitude, longitude], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add marker for hospital location
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup('<b>{{ hospital.name }}</b><br>{{ hospital.place }}, {{ hospital.district }}')
+            .openPopup();
+    </script>
+</body>
+</html>

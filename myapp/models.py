@@ -16,7 +16,7 @@ class hospital_table(models.Model):
     LOGIN=models.ForeignKey(User,on_delete=models.CASCADE)
 
 class ambulance_table(models.Model):
-    registration_no=models.BigIntegerField()
+    registration_no=models.CharField(max_length=50)
     drivers_name=models.CharField(max_length=100)
     phone=models.BigIntegerField()
     email = models.CharField(max_length=100)
@@ -60,7 +60,7 @@ class notification_table(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     date = models.DateField()
-    photo = models.CharField(max_length=200)
+    photo = models.FileField()
     USER = models.ForeignKey(user_table, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
 
@@ -68,11 +68,16 @@ class accident_report_table(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     date = models.DateField()
-    photo = models.CharField(max_length=200)
-    USER=models.ForeignKey(user_table,on_delete=models.CASCADE,default="null")
-    AMBULANCE=models.ForeignKey(ambulance_table,on_delete=models.CASCADE,default="null")
+    photo = models.FileField(upload_to="accidents/")
     status = models.CharField(max_length=100)
-    HOSPITAL=models.ForeignKey(hospital_table,on_delete=models.CASCADE,default="null")
+
+    USER = models.ForeignKey(user_table, on_delete=models.CASCADE)
+    AMBULANCE = models.ForeignKey(
+        ambulance_table, on_delete=models.CASCADE, null=True, blank=True
+    )
+    HOSPITAL = models.ForeignKey(
+        hospital_table, on_delete=models.CASCADE, null=True, blank=True
+    )
 
 
 class medical_report_table(models.Model):

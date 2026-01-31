@@ -10,27 +10,43 @@
   
   <table class="table table-hover">
     <tr>
-      <th>Alert</th>
+      <th>Accident</th>
       <th>Date</th>
-      <th>Latitude</th>
-      <th>Longitude</th>
-      <th>User</th>
-      <th>Ambulance</th>
+      <th>User details</th>
+      <th>Ambulance details</th>
       <th>Actions</th>
     </tr>
+
+      {% for i in data %}
    
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>
+          <img src="{{ i.photo.url }}" height="100" width="100">
+          {{ i.status }}
+
+
+      </td>
+      <td>{{ i.date }}</td>
+      <td>
+          <img src="{{ i.USER.photo.url }}" height="100" width="100"><br>
+          Name:{{ i.USER.name }}<br>
+          Phone:{{ i.USER.phone }}<br>
+          Email:{{ i.USER.email }}<br>
+          Place:{{ i.USER.place }}<br>
+          District:{{ i.USER.district }}<br>
+      </td>
+      <td> No: {{ i.AMBULANCE.registration_no }}<br>
+          Driver : {{ i.AMBULANCE.drivers_name }}<br>
+          Phone : {{ i.AMBULANCE.phone }}<br>
+
+      </td>
       <td class="actions">
-        <a href="/myapp/add_medicalreport/{{ i.id }}/" class="btn btn-success">Report</a>
+        <a href="/myapp/view_medicalreport/{{ i.id }}/" class="btn btn-success">Report</a>
         <a href="chat.html" class="btn btn-primary">Chat</a>
       </td>
     </tr>
+
+      {% endfor %}
   </table>
 </body>
 {% endblock %}

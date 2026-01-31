@@ -1,90 +1,107 @@
 
+{#{% extends 'Hospital/hospital_index.html' %}#}
+{#{% block body %}#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>View Medical Reports</title>#}
+{##}
+{#</head>#}
+{#<body>#}
+{#  <h2>View Medical Reports</h2>#}
+{#  #}
+{#  <table>#}
+{#    <tr>#}
+{#      <th>Sl. No</th>#}
+{#      <th>Report</th>#}
+{#      <th>Date</th>#}
+{#      <th>Edit</th>#}
+{#      <th>Delete</th>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td></td>#}
+{#      <td></td>#}
+{#      <td></td>#}
+{#      <td><button class="btn btn-edit">Edit</button></td>#}
+{#      <td><button class="btn btn-delete">Delete</button></td>#}
+{#    </tr>#}
+{#  </table>#}
+{#</body>#}
+{#{% endblock %}#}
+
+
 {% extends 'Hospital/hospital_index.html' %}
 {% block body %}
-<head>
-  <meta charset="UTF-8">
-  <title>View Medical Reports</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f9ff;
-      padding: 30px;
-    }
 
-    h2 {
-      text-align: center;
-      color: #003366;
-      margin-bottom: 20px;
-    }
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12">
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #ffffff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
+      <!-- Header + Add Button -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-primary mb-0">Medical Reports</h3>
 
-    th, td {
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      text-align: center;
-    }
+        <a href="/myapp/add_medicalreport/" class="btn btn-success">
+          <i class="bi bi-plus-circle"></i> Add Medical Report
+        </a>
+      </div>
 
-    th {
-      background: #0078d7;
-      color: white;
-    }
+      <!-- Table Card -->
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
 
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
+          <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0 align-middle">
+              <thead class="table-primary text-center">
+                <tr>
+                  <th>Sl. No</th>
+                  <th>Report</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
 
-    .btn {
-      padding: 6px 12px;
-      font-size: 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-      transition: background 0.3s ease;
-    }
+              <tbody>
+                {% for i in data %}
+                <tr>
+                  <td class="text-center">{{ forloop.counter }}</td>
 
-    .btn-edit {
-      background: #28a745;
-    }
-    .btn-edit:hover {
-      background: #1e7e34;
-    }
+                  <td>
+                    {{ i.report|truncatechars:100 }}
+                  </td>
 
-    .btn-delete {
-      background: #d9534f;
-    }
-    .btn-delete:hover {
-      background: #b52b27;
-    }
-  </style>
-</head>
-<body>
-  <h2>View Medical Reports</h2>
-  
-  <table>
-    <tr>
-      <th>Sl. No</th>
-      <th>Report</th>
-      <th>Date</th>
-      <th>Edit</th>
-      <th>Delete</th>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><button class="btn btn-edit">Edit</button></td>
-      <td><button class="btn btn-delete">Delete</button></td>
-    </tr>
-  </table>
-</body>
+                  <td class="text-center">
+                    {{ i.date }}
+                  </td>
+
+                  <td class="text-center">
+                    <a href='/myapp/edit_medical_report/{{ i.id }}' class="btn btn-sm btn-warning">
+                      Edit
+                    </a>
+                    <a href='/myapp/edit_medical_report/{{ i.id }}'
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Are you sure you want to delete this report?')">
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center text-muted py-4">
+                    No medical reports found
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+

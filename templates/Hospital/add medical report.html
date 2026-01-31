@@ -1,86 +1,70 @@
+{##}
+{#{% extends 'Hospital/hospital_index.html' %}#}
+{#{% block body %}#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Add Medical Report</title>#}
+{##}
+{#</head>#}
+{#<body>#}
+{#  <div class="container">#}
+{#    <h2>Add Medical Report</h2>#}
+{#    <form class="table table-bordered">#}
+{#      <label for="report">Medical Report</label>#}
+{#      <textarea id="report" name="report" placeholder="Enter medical report here..."></textarea>#}
+{#      <button type="submit" class="btn">Add</button>#}
+{#    </form>#}
+{#  </div>#}
+{#</body>#}
+{#{% endblock %}#}
+{##}
+
 
 {% extends 'Hospital/hospital_index.html' %}
 {% block body %}
-<head>
-  <meta charset="UTF-8">
-  <title>Add Medical Report</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f9ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
 
-    .container {
-      background: #ffffff;
-      padding: 25px 30px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-      width: 400px;
-      text-align: center;
-    }
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
 
-    h2 {
-      margin-bottom: 20px;
-      color: #003366;
-    }
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">Add Medical Report</h4>
+        </div>
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      text-align: left;
-      color: #333;
-    }
+        <div class="card-body">
+          <form method="post" action="/myapp/addmed_post/">
+            {% csrf_token %}
 
-    textarea {
-      width: 100%;
-      height: 150px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      resize: none;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.3s ease;
-    }
+            <div class="mb-3">
+              <label for="report" class="form-label fw-bold">
+                Medical Report
+              </label>
+              <textarea
+                class="form-control"
+                id="report"
+                name="report"
+                rows="6"
+                placeholder="Enter medical report details here..."
+                required
+              ></textarea>
+            </div>
 
-    textarea:focus {
-      border-color: #0078d7;
-    }
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-file-earmark-plus"></i> Add Report
+              </button>
+            </div>
+          </form>
+        </div>
 
-    .btn {
-      margin-top: 15px;
-      width: 100%;
-      padding: 12px;
-      background: #0078d7;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+        <div class="card-footer text-center text-muted">
+          Ensure all medical details are accurate
+        </div>
+      </div>
 
-    .btn:hover {
-      background: #005bb5;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Add Medical Report</h2>
-    <form>
-      <label for="report">Medical Report</label>
-      <textarea id="report" name="report" placeholder="Enter medical report here..."></textarea>
-      <button type="submit" class="btn">Add</button>
-    </form>
+    </div>
   </div>
-</body>
-{% endblock %}
+</div>
 
+{% endblock %}
