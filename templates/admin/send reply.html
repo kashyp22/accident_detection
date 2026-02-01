@@ -1,83 +1,179 @@
+{##}
+{#{% extends 'admin/admin_index1.html' %}#}
+{#{% block body %}#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Verify Ambulance</title>#}
+{#  <style>#}
+{##}
+{#    h2 {#}
+{#      text-align: center;#}
+{#      color: #ffd700; /* Gold accent */#}
+{#      margin-bottom: 20px;#}
+{#    }#}
+{#    table {#}
+{#      width: 100%;#}
+{#      border-collapse: collapse;#}
+{#      background: #2b2b3c;#}
+{#      box-shadow: 0 4px 10px rgba(0,0,0,0.5);#}
+{#      border-radius: 8px;#}
+{#      overflow: hidden;#}
+{#    }#}
+{#    th, td {#}
+{#      border: 1px solid #444;#}
+{#      padding: 12px;#}
+{#      text-align: center;#}
+{#      font-size: 14px;#}
+{#    }#}
+{#    th {#}
+{#      background: #3a3a4d;#}
+{#      color: #ffd700;#}
+{#      text-transform: uppercase;#}
+{#      letter-spacing: 1px;#}
+{#    }#}
+{#    tr:nth-child(even) {#}
+{#      background: #242433;#}
+{#    }#}
+{#    tr:hover {#}
+{#      background: #38384d;#}
+{#      transition: 0.3s;#}
+{#    }#}
+{#    a {#}
+{#      text-decoration: none;#}
+{#      padding: 6px 12px;#}
+{#      border-radius: 5px;#}
+{#      font-size: 13px;#}
+{#      font-weight: bold;#}
+{#      margin: 0 3px;#}
+{#      display: inline-block;#}
+{#    }#}
+{#    a.accept {#}
+{#      background: #28a745;#}
+{#      color: white;#}
+{#    }#}
+{#    a.accept:hover {#}
+{#      background: #218838;#}
+{#    }#}
+{#    a.reject {#}
+{#      background: #dc3545;#}
+{#      color: white;#}
+{#    }#}
+{#    a.reject:hover {#}
+{#      background: #b52a37;#}
+{#    }#}
+{#  </style>#}
+{#</head>#}
+{#<body>#}
+{#  <h2>Send Reply</h2><form action="/myapp/sendreply_post/" method="post">#}
+{#      {% csrf_token %}#}
+{##}
+{##}
+{#  <table>#}
+{#    <tr>#}
+{#      <th> <input type="textarea" name="reply" placeholder="Reply" id="Reply"></th>#}
+{#      <td> <button type="submit">Send</button></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <td></td>#}
+{#    </tr>#}
+{#  </table>#}
+{#      </form>#}
+{#</body>#}
+{#{% endblock %}#}
+{#</html>#}
+
 
 {% extends 'admin/admin_index1.html' %}
 {% block body %}
-<head>
-  <meta charset="UTF-8">
-  <title>Verify Ambulance</title>
-  <style>
 
-    h2 {
-      text-align: center;
-      color: #ffd700; /* Gold accent */
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #2b2b3c;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      border: 1px solid #444;
-      padding: 12px;
-      text-align: center;
-      font-size: 14px;
-    }
-    th {
-      background: #3a3a4d;
-      color: #ffd700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    tr:nth-child(even) {
-      background: #242433;
-    }
-    tr:hover {
-      background: #38384d;
-      transition: 0.3s;
-    }
-    a {
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 5px;
-      font-size: 13px;
-      font-weight: bold;
-      margin: 0 3px;
-      display: inline-block;
-    }
-    a.accept {
-      background: #28a745;
-      color: white;
-    }
-    a.accept:hover {
-      background: #218838;
-    }
-    a.reject {
-      background: #dc3545;
-      color: white;
-    }
-    a.reject:hover {
-      background: #b52a37;
-    }
-  </style>
-</head>
-<body>
-  <h2>Send Reply</h2><form action="/myapp/sendreply_post/" method="post">
-      {% csrf_token %}
+<style>
+  body {
+    background: #1e1e2f;
+    font-family: 'Segoe UI', sans-serif;
+  }
 
+  .reply-card {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #2b2b3c;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
 
-  <table>
-    <tr>
-      <th> <input type="textarea" name="reply" placeholder="Reply" id="Reply"></th>
-      <td> <button type="submit">Send</button></td>
-    </tr>
-    <tr>
-      <td></td>
-    </tr>
-  </table>
-      </form>
-</body>
+  .reply-card h2 {
+    text-align: center;
+    color: #ffd700;
+    margin-bottom: 25px;
+    font-weight: bold;
+  }
+
+  label {
+    color: #ccc;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    background: #1f1f2e;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    color: #fff;
+    resize: none;
+    outline: none;
+  }
+
+  textarea::placeholder {
+    color: #888;
+  }
+
+  textarea:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 6px rgba(255,215,0,0.6);
+  }
+
+  .btn-container {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .send-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .send-btn:hover {
+    background: linear-gradient(135deg, #218838, #1abc9c);
+    box-shadow: 0 0 10px rgba(40,167,69,0.7);
+  }
+
+</style>
+
+<div class="reply-card">
+  <h2>Send Reply</h2>
+
+  <form action="/myapp/sendreply_post/" method="post">
+    {% csrf_token %}
+
+    <label for="reply">Reply Message</label>
+    <textarea name="reply" id="reply" placeholder="Type your reply here..." required></textarea>
+
+    <div class="btn-container">
+      <button type="submit" class="send-btn">Send Reply</button>
+    </div>
+  </form>
+</div>
+
 {% endblock %}
-</html>

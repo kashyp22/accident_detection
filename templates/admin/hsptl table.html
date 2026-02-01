@@ -14,7 +14,22 @@
 
   <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
+<style>
+        a.track {
+         text-decoration: none;
+      background: #13b8f9;
+      color: white;
+    }
+      a {
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 0 3px;
+      display: inline-block;
+    }
+</style>
 </head>
 <body>
   <h2>Hospital Details</h2>
@@ -29,7 +44,6 @@
       <th>Post</th>
       <th>District</th>
       <th>Logo</th>
-      <th>Status</th>
       <th>Track</th>
       <th>Action</th>
     </tr>
@@ -46,12 +60,17 @@
       <td>{{ i.post}}</td>
       <td>{{ i.district }}</td>
       <td><img  src="/media/{{ i.logo }}" height="50" width="50"> </td>
-      <td>{{ i.status}}</td>
-        <td><a href="https://www.google.com/maps?q={{ i.latitude }},{{ i.longitude }}" target="_blank">Track</a></td>
+        <td><a href="https://www.google.com/maps?q={{ i.latitude }},{{ i.longitude }}" target="_blank" class="track">Track</a></td>
+
+        {% if i.status == "pending" %}
         <td>
         <a href="/myapp/accpt_hos/{{ i.id }}/" class="btn btn-success">Accept</a><br>
         <a href="/myapp/rejt_hos/{{ i.id }}/" class="btn btn-danger">Reject</a>
       </td>
+    {% else %}
+          <td>{{ i.status}}</td>
+    {% endif %}
+
     </tr>
       {% endfor %}
   </tbody>

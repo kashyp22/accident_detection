@@ -1,12 +1,12 @@
 from datetime import datetime
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import Group,User
 from django.core.files.storage import FileSystemStorage
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
 
@@ -40,10 +40,15 @@ def loginn(request):
     return render(request,'loginindex.html')
 
 
+def logout_get(request):
+    logout(request)
+    return redirect('/myapp/login/')
 
+
+@login_required(login_url='/myapp/login/')
 def verify_hosp(request):
     var = hospital_table.objects.all()
-    return render(request,'admin/hsptl table.html',{'data':var})
+    return render(request,'admin/hsptl table.html',{'data':var,"values":request.session['values']})
 
 
 def accpt_hos(request,id):
@@ -57,26 +62,132 @@ def rejt_hos(request,id):
     ob.save()
     return redirect('/myapp/verify_hosp/')
 
-
+@login_required(login_url='/myapp/login/')
 def verify_ambulance(request):
     var=ambulance_table.objects.all()
-    return render(request,'admin/ambu table.html',{'data':var})
+    return render(request,'admin/ambu table.html',{'data':var,"values":request.session['values']})
 
+
+def accpt_amb(request,id):
+    ob=ambulance_table.objects.get(id=id)
+    ob.act_status='accepted'
+    ob.save()
+    return redirect('/myapp/verify_ambulance/')
+def rejt_amb(request,id):
+    ob = hospital_table.objects.get(id=id)
+    ob.act_status = 'rejected'
+    ob.save()
+    return redirect('/myapp/verify_ambulance/')
+
+@login_required(login_url='/myapp/login/')
 def view_user(request):
     var=user_table.objects.all()
-    return  render(request,'admin/view users.html',{'data':var})
+    return  render(request,'admin/view users.html',{'data':var,"values":request.session['values']})
 
+@login_required(login_url='/myapp/login/')
 def view_rating(request):
     var=rating_table.objects.all()
-    return render(request,'admin/view rating.html',{'data':var})
+    return render(request,'admin/view rating.html',{'data':var,"values":request.session['values']})
 
+# def admin_view_complaint(request):
+#     var=complaint_table.objects.all()
+#     l=[]
+#     for i in var:
+#
+#
+#
+#
+#
+#     return render(request,'admin/view complaint.html',{'data':var})
+
+
+# def admin_view_complaint(request):
+#     complaints = complaint_table.objects.select_related('LOGIN').all()
+#
+#     data = []
+#
+#     for c in complaints:
+#         user = c.LOGIN
+#
+#         groups = user.groups.all()
+#         for g in groups:
+#
+#             ambulance = None
+#             hospital = None
+#
+#             if g.name == "ambulance":
+#                 ambulance = ambulance_table.objects.filter(LOGIN=user).first()
+#                 data.append({
+#                     'complaint': c,
+#                     'user': user,
+#                     'ambulance': ambulance,
+#                     'hospital': hospital,
+#                 })
+#
+#             elif g.name == "hospital":
+#                 hospital = hospital_table.objects.filter(LOGIN=user).first()
+#
+#                 data.append({
+#                     'complaint': c,
+#                     'user': user,
+#                     'ambulance': ambulance,
+#                     'hospital': hospital,
+#                 })
+#
+#     return render(
+#         request,
+#         'admin/view_complaint.html',
+#         {'data': data}
+#     )
+#
+#
+
+@login_required(login_url='/myapp/login/')
 def admin_view_complaint(request):
-    var=complaint_table.objects.all()
-    return render(request,'admin/view complaint.html',{'data':var})
+    complaints = complaint_table.objects.select_related('LOGIN').all()
+    data = []
 
+    for c in complaints:
+        login_user = c.LOGIN
+        user_type = ""
+        display_name = ""
+        phone = ""
+
+        # 🔹 Check USER
+        user_obj = user_table.objects.filter(LOGIN=login_user).first()
+        if user_obj:
+            user_type = "User"
+            display_name = user_obj.name
+            phone = user_obj.phone
+
+        # 🔹 Check AMBULANCE
+        amb_obj = ambulance_table.objects.filter(LOGIN=login_user).first()
+        if amb_obj:
+            user_type = "Ambulance"
+            display_name = amb_obj.drivers_name
+            phone = amb_obj.phone
+
+        # 🔹 Check HOSPITAL
+        hos_obj = hospital_table.objects.filter(LOGIN=login_user).first()
+        if hos_obj:
+            user_type = "Hospital"
+            display_name = hos_obj.name
+            phone = hos_obj.phone
+
+        data.append({
+            'complaint': c,
+            'name': display_name,
+            'phone': phone,
+            'type': user_type,
+        })
+
+    return render(request, 'admin/view complaint.html', {'data': data,"values":request.session['values']})
+
+@login_required(login_url='/myapp/login/')
 def change_password(request):
-    return render(request,'admin/chngepass.html')
+    return render(request,'admin/chngepass.html',{"values":request.session['values']})
 
+@login_required(login_url='/myapp/login/')
 def admin_change_password_post(request):
     old=request.POST['old']
     new=request.POST['new']
@@ -95,10 +206,25 @@ def admin_change_password_post(request):
 
 
 
-
+@login_required(login_url='/myapp/login/')
 def admin_homepage(request):
-    return render(request,'admin/admin_index1.html')
+    hos_total=hospital_table.objects.filter(status="accepted").count()
+    amb_total=ambulance_table.objects.filter(act_status="accepted").count()
+    usr_total=user_table.objects.all().count()
+    acci_total=accident_report_table.objects.all().count()
 
+    data={
+        "hos_total":hos_total,
+        "amb_total":amb_total,
+        "usr_total":usr_total,
+        "acci_total":acci_total,
+    }
+
+    request.session['values']=data
+
+    print(hos_total,amb_total,usr_total)
+    return render(request,'admin/admin_index1.html',{"values":data})
+@login_required(login_url='/myapp/login/')
 def sendReply(request,id):
     request.session['rid']=id
     return render(request,'admin/send reply.html')
@@ -113,10 +239,9 @@ def sendreply_post(request):
 
 
 # =============================== Hospital ==========================
-
+@login_required(login_url='/myapp/login/')
 def hos_home(request):
     return render(request,'Hospital/hospital_index.html')
-
 
 
 def registration(request):
@@ -157,7 +282,7 @@ def reg_post(request):
     l.save()
     return redirect('/myapp/login/')
 
-
+@login_required(login_url='/myapp/login/')
 def send_complaint(request):
     return render(request,'Hospital/send ccomplaint.html')
 
@@ -172,17 +297,18 @@ def sndcomp_post(request):
     return redirect('/myapp/view_complaint/')
 
 
-
+@login_required(login_url='/myapp/login/')
 def view_complaint(request):
     data=complaint_table.objects.filter(LOGIN_id=request.user.id)
     return render(request,'Hospital/view comp hsptl.html',{'data':data})
 
+@login_required(login_url='/myapp/login/')
 def view_accident(request):
     var=accident_report_table.objects.filter(HOSPITAL__LOGIN_id=request.user.id)
     return render(request,'Hospital/view accdnt alert.html',{'data':var})
 
 
-
+@login_required(login_url='/myapp/login/')
 def add_medicalreport(request):
     return render(request,'Hospital/add medical report.html')
 
@@ -197,7 +323,7 @@ def addmed_post(request):
     ob.save()
     return redirect(f'/myapp/view_medicalreport/{request.session["aid"]}/')
 
-
+@login_required(login_url='/myapp/login/')
 def view_medicalreport(request,id):
     request.session['aid']=id
     var=medical_report_table.objects.filter(ACCIDENT_id=id)
@@ -205,7 +331,7 @@ def view_medicalreport(request,id):
 
 
 
-
+@login_required(login_url='/myapp/login/')
 def edit_medicalreport(request):
     return render(request,'Hospital/edit medical report.html')
 def editmed_post(request):
@@ -219,7 +345,7 @@ def editmed_post(request):
     return redirect('')
 
 
-@login_required
+@login_required(login_url='/myapp/login/')
 def hospital_view_profile(request):
     """View hospital profile"""
     try:
@@ -244,7 +370,7 @@ import os
 from django.conf import settings
 
 
-@login_required
+@login_required(login_url='/myapp/login/')
 def hospital_edit_profile_get(request):
     """Display edit profile form"""
     try:
@@ -260,7 +386,7 @@ def hospital_edit_profile_get(request):
         return redirect('login')
 
 
-@login_required
+@login_required(login_url='/myapp/login/')
 def hospital_edit_profile_post(request):
     """Handle edit profile form submission"""
     if request.method == 'POST':
@@ -308,13 +434,6 @@ def hospital_edit_profile_post(request):
     return redirect('hospital_edit_profile_get')
 
 
-
-
-
-
-
-
-
 ########flutter
 
 
@@ -331,7 +450,6 @@ def FlutterLogin(request):
             ob.latitude = latitude
             ob.longitude = longitude
             ob.save()
-
             return JsonResponse({"status":"ok","type":"Ambulance","lid":user.id})
         elif user.groups.filter(name="User").exists():
             ob=user_table.objects.get(LOGIN=user.id)
@@ -555,6 +673,111 @@ def ambulance_view_near_notification(request):
 
 
 
+def ambulance_view_near_accidents(request):
+    am_lat = float(request.POST['latitude'])
+    am_lon = float(request.POST['longitude'])
+    data = accident_report_table.objects.all()
+    l = []
+    for i in data:
+        distance = haversine(am_lat, am_lon, i.latitude, i.longitude)
+        print(distance, "distance")
+        if distance <= 20:  # filte
+            l.append({
+                "id": i.id,
+                "latitude": i.latitude,
+                "longitude": i.longitude,
+                "date": i.date,
+                "photo": i.photo.url,
+                "u_name": i.USER.name,
+                "u_phone": i.USER.phone,
+                "hos_lid": i.HOSPITAL.LOGIN_id,
+                "hos_name": i.HOSPITAL.name,
+                "hos_phone": i.HOSPITAL.phone,
+                "hos_email": i.HOSPITAL.email,
+                "hos_latitude": i.HOSPITAL.latitude,
+                "hos_longitude": i.HOSPITAL.longitude,
+                "distance": round(distance, 2),
+                "status": i.status,
+
+            })
+
+    return JsonResponse ({'status':'ok','data':l})
+
+
+
+def ambulance_view_accident_notification(request):
+    am_lat = float(request.POST['latitude'])
+    am_lon = float(request.POST['longitude'])
+    lid=request.POST['lid']
+    data = accident_report_table.objects.filter(AMBULANCE__LOGIN_id=lid,view_status=False)
+    l = []
+    for i in data:
+        distance = haversine(am_lat, am_lon, i.latitude, i.longitude)
+        print(distance, "distance")
+        if distance <= 20:
+            # filte
+
+            l.append({
+                "id": i.id,
+                "latitude": i.latitude,
+                "longitude": i.longitude,
+                "date": i.date,
+                "photo": i.photo.url,
+                "u_name": i.USER.name,
+                "u_phone": i.USER.phone,
+                "hos_name": i.HOSPITAL.name,
+                "hos_phone": i.HOSPITAL.phone,
+                "hos_email": i.HOSPITAL.email,
+                "hos_latitude": i.HOSPITAL.latitude,
+                "hos_longitude": i.HOSPITAL.longitude,
+                "distance": round(distance, 2),
+                "status": i.status,
+
+            })
+            i.view_status=True
+            i.save()
+
+
+    return JsonResponse ({'status':'ok','data':l})
+
+
+
+
+
+# view
+def online_update_status(request):
+    lid = request.POST.get("lid")
+
+    accident = ambulance_table.objects.get(LOGIN_id=lid)
+    accident.status = "online"
+    accident.save()
+
+    return JsonResponse({"status": "ok"})
+
+def offline_update_status(request):
+    lid = request.POST.get("lid")
+
+    accident = ambulance_table.objects.get(LOGIN_id=lid)
+    accident.status = "offline"
+    accident.save()
+
+    return JsonResponse({"status": "ok"})
+
+
+
+
+# view
+def update_accident_status(request):
+    acc_id = request.POST.get("accident_id")
+    status = request.POST.get("status")
+
+    accident = accident_report_table.objects.get(id=acc_id)
+    accident.status = status
+    accident.save()
+
+    return JsonResponse({"status": "ok"})
+
+
 
 # ==================user===================
 
@@ -722,11 +945,33 @@ def sendFeedback(request):
     lob.save()
     return JsonResponse({'status': 'ok'})
 
+def user_view_near_accidents(request):
+    am_lat = float(request.POST['latitude'])
+    am_lon = float(request.POST['longitude'])
+    data = accident_report_table.objects.all()
+    l = []
+    for i in data:
+        distance = haversine(am_lat, am_lon, i.latitude, i.longitude)
+        print(distance, "distance")
+        if distance <= 20:  # filte
+            l.append({
+                "id": i.id,
+                "latitude": i.latitude,
+                "longitude": i.longitude,
+                "date": i.date,
+                "status": i.status,
+                "photo": i.photo.url,
+                "u_name": i.USER.name,
+                "u_phone": i.USER.phone,
+                "distance": round(distance, 2),
+
+            })
+    print(l,"lllllllllllllll")
+    return JsonResponse ({'status':'ok','data':l})
 
 
 
 # accident detection
-
 
 def accident_detection(request):
     userid = request.POST.get('uid')
@@ -742,7 +987,8 @@ def accident_detection(request):
     amb = ambulance_table.objects.all()
     hosp = hospital_table.objects.all()
 
-
+    if accident_report_table.objects.filter(latitude=us_lat,longitude=us_lon,USER_id=userid).exists():
+        return JsonResponse({"status":"already added"})
 
     lob = accident_report_table()
     lob.USER = user
@@ -765,3 +1011,89 @@ def accident_detection(request):
     lob.save()
     return JsonResponse({'status': 'ok'})
 
+
+
+# ===========  chat ===============
+
+
+def chat1(request, id):
+    if request.user.id!='':
+        request.session["userid"] = id
+        cid = str(request.session["userid"])
+        request.session["new"] = cid
+        qry = ambulance_table.objects.get(LOGIN_id=cid)
+
+        return render(request, "Hospital/Chat.html", {'photo': qry.rc.url, 'name': qry.drivers_name, 'toid': cid})
+    else:
+        return HttpResponse('''<script>alert('You are not Logined');window.location='/myapp/login/'</script>''')
+
+
+def chat_view(request):
+    if request.user.id!='':
+        fromid = request.user.id
+        toid = request.session["userid"]
+        qry = ambulance_table.objects.get(LOGIN_id=request.session["userid"])
+        from django.db.models import Q
+
+        res = chat_tabele.objects.filter(Q(FROM_ID_id=fromid, TO_ID_id=toid) | Q(FROM_ID_id=toid, TO_ID_id=fromid))
+        l = []
+
+        for i in res:
+            l.append({"id": i.id, "message": i.message, "to": i.TO_ID_id, "date": i.date, "from": i.FROM_ID_id})
+
+        return JsonResponse({'photo': qry.rc.url, "data": l, 'name': qry.drivers_name, 'toid': request.session["userid"]})
+    else:
+        return HttpResponse('''<script>alert('You are not Logined');window.location='/myapp/login/'</script>''')
+
+
+def chat_send_web(request, msg):
+    if request.user.id!='':
+        lid = request.user.id
+        toid = request.session["userid"]
+        message = msg
+
+        import datetime
+        d = datetime.datetime.now().date()
+        chatobt = chat_tabele()
+        chatobt.message = message
+        chatobt.TO_ID_id = toid
+        chatobt.FROM_ID_id = lid
+        chatobt.date = d
+        chatobt.save()
+    else:
+        return HttpResponse('''<script>alert('You are not Logined');window.location='/myapp/login/'</script>''')
+
+
+    return JsonResponse({"status": "ok"})
+
+# dart chat
+
+def chat_send(request):
+    FROM_id=request.POST['from_id']
+    TOID_id=request.POST['to_id']
+    msg=request.POST['message']
+
+    from  datetime import datetime
+    c=chat_tabele()
+    c.FROM_ID_id=FROM_id
+    c.TO_ID_id=TOID_id
+    c.message=msg
+    c.date=datetime.now().date()
+    c.time=datetime.now().time()
+    c.save()
+    return JsonResponse({'status':"ok"})
+
+def chat_view_and(request):
+    from_id=request.POST['from_id']
+    to_id=request.POST['to_id']
+    l=[]
+    data1=chat_tabele.objects.filter(FROM_ID_id=from_id,TO_ID_id=to_id).order_by('id')
+    data2=chat_tabele.objects.filter(FROM_ID_id=to_id,TO_ID_id=from_id).order_by('id')
+
+    data= data1 | data2
+    print(data)
+
+    for res in data:
+        l.append({'id':res.id,'from':res.FROM_ID.id,'to':res.TO_ID.id,'msg':res.message,'date':res.date})
+
+    return JsonResponse({'status':"ok",'data':l})

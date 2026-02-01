@@ -4,6 +4,7 @@ from myapp import views
 
 urlpatterns = [
 
+    path('logout_get/',views.logout_get),
     path('login/',views.loginn),
     path('verify_hosp/',views.verify_hosp),
     path('verify_ambulance/',views.verify_ambulance),
@@ -46,11 +47,34 @@ urlpatterns = [
     path('user_view_near_notification/', views.user_view_near_notification),
     path('user_view_near_ambulance/', views.user_view_near_ambulance),
     path('send_feedback/', views.sendFeedback),
+    path('ambulance_view_near_accidents/', views.ambulance_view_near_accidents),
+    path('ambulance_update_accident_status/', views.update_accident_status),
+    path('ambulance_view_accident_notification/', views.ambulance_view_accident_notification),
 
     path('hospital_view_profile/', views.hospital_view_profile, name='hospital_view_profile'),
     path('hospital_edit_profile/', views.hospital_edit_profile_get, name='hospital_edit_profile_get'),
     path('hospital_edit_profile_post/', views.hospital_edit_profile_post, name='hospital_edit_profile_post'),
-    path('accident_detection/', views.accident_detection, name='accident_detection'),
+    path('user_view_near_accidents/', views.user_view_near_accidents, name='user_view_near_accidents'),
 
+    path('accident_detection/', views.accident_detection, name='accident_detection'),
+    path('online_update_status/', views.online_update_status, name='online_update_status'),
+    path('offline_update_status/', views.offline_update_status, name='offline_update_status'),
+
+
+
+#     chat web
+
+    path('accpt_amb/<id>', views.accpt_amb, name='accpt_amb'),
+    path('rejt_amb/<id>', views.rejt_amb, name='rejt_amb'),
+
+
+
+    path('chat1/<id>', views.chat1, name='chat1'),
+    path('chat_view/', views.chat_view, name='chat_view'),
+    path('chat_send_web/<msg>', views.chat_send_web, name='chat_send_web'),
+
+#     flutter chat
+    path('chat_send/', views.chat_send, name='chat_send'),
+    path('chat_view_and/', views.chat_view_and, name='chat_view_and'),
 
 ]

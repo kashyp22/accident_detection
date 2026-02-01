@@ -23,6 +23,7 @@ class ambulance_table(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     status = models.CharField(max_length=100)
+    act_status = models.CharField(max_length=100,default="pending")
     LOGIN=models.ForeignKey(User,on_delete=models.CASCADE)
     rc=models.FileField()
 
@@ -70,6 +71,7 @@ class accident_report_table(models.Model):
     date = models.DateField()
     photo = models.FileField(upload_to="accidents/")
     status = models.CharField(max_length=100)
+    view_status=models.BooleanField(default=False)
 
     USER = models.ForeignKey(user_table, on_delete=models.CASCADE)
     AMBULANCE = models.ForeignKey(

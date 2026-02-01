@@ -51,6 +51,11 @@ import cv2
 import torch
 from transformers import DetrForObjectDetection, DetrImageProcessor
 import time
+import requests
+from io import BytesIO
+
+last_sent_time = 0
+COOLDOWN_SECONDS = 10
 
 # 1) Load the model
 model_name = "hilmantm/detr-traffic-accident-detection"
@@ -94,6 +99,49 @@ while True:
 
         # Get label name
         label_name = model.config.id2label.get(label_id, f"Class {label_id}")
+
+        if label_name == "accident":
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+            text = f"{label_name} {score}"
+            (tw, th), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
+            cv2.rectangle(frame, (x1, y1 - th - 10), (x1 + tw, y1), (0, 255, 0), -1)
+            cv2.putText(frame, text, (x1, y1 - 5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+
+            current_time = time.time()
+            # import cv2
+            # import requests
+            # import time
+
+            # from io import BytesIO
+
+            # ✅ SEND REQUEST ONLY IF COOLDOWN PASSED
+            if current_time - last_sent_time >= COOLDOWN_SECONDS:
+                print("🚨 Accident detected! Sending alert...")
+
+                success, encoded_img = cv2.imencode(".jpg", frame)
+                if success:
+                    image_bytes = encoded_img.tobytes()
+
+                    files = {
+                        "image": ("accident.jpg", image_bytes, "image/jpeg")
+                    }
+                    data = {
+                        "uid": "1"
+                    }
+
+                    response = requests.post(
+                        "http://localhost:8000/myapp/accident_detection/",
+                        files=files,
+                        data=data,
+                        timeout=5
+                    )
+
+                    print(response.status_code, response.text)
+
+                    last_sent_time = current_time
+
         if label_name == "accident":
         # Draw rectangle
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
@@ -135,10 +183,10 @@ while True:
                     "uid": "1"
                 }
 
-                response = requests.post(url, files=files, data=data)
+            response = requests.post(url, files=files, data=data)
 
-                print(response.status_code)
-                print(response.text)
+            print(response.status_code)
+            print(response.text)
 
     # Display FPS (optional)
     cv2.putText(frame, "Press 'q' to quit", (10, 30),
