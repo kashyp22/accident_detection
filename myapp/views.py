@@ -1,4 +1,8 @@
+import random
+import smtplib
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -672,6 +676,14 @@ def ambulance_view_near_notification(request):
     return JsonResponse ({'status':'ok'})
 
 
+def update_location(request):
+    lid=request.POST['lid']
+    lat=request.POST['latitude']
+    lon=request.POST['longitude']
+    Ambulance.objects.filter(LOGIN_id=lid).update(latitude=lat,longitude=lon)
+    return JsonResponse({"status": "ok"})
+
+
 
 def ambulance_view_near_accidents(request):
     am_lat = float(request.POST['latitude'])
@@ -704,7 +716,6 @@ def ambulance_view_near_accidents(request):
     return JsonResponse ({'status':'ok','data':l})
 
 
-
 def ambulance_view_accident_notification(request):
     am_lat = float(request.POST['latitude'])
     am_lon = float(request.POST['longitude'])
@@ -715,8 +726,7 @@ def ambulance_view_accident_notification(request):
         distance = haversine(am_lat, am_lon, i.latitude, i.longitude)
         print(distance, "distance")
         if distance <= 20:
-            # filte
-
+            # filter
             l.append({
                 "id": i.id,
                 "latitude": i.latitude,
@@ -739,9 +749,6 @@ def ambulance_view_accident_notification(request):
 
 
     return JsonResponse ({'status':'ok','data':l})
-
-
-
 
 
 # view
@@ -971,6 +978,35 @@ def user_view_near_accidents(request):
 
 
 
+def user_change_password_post(request):
+    old=request.POST['old']
+    new=request.POST['new']
+    lid=request.POST['lid']
+    user=User.objects.get(id=lid)
+    f=check_password(old,user.password)
+    if f:
+        user=user
+        user.set_password(new)
+        user.save()
+        return JsonResponse({"status":"ok"})
+    else:
+        return JsonResponse({"status":"no"})
+
+def amb_change_password_post(request):
+    old = request.POST['old']
+    new = request.POST['new']
+    lid = request.POST['lid']
+    user = User.objects.get(id=lid)
+    f = check_password(old, user.password)
+    if f:
+        user = user
+        user.set_password(new)
+        user.save()
+        return JsonResponse({"status": "ok"})
+    else:
+        return JsonResponse({"status": "no"})
+
+
 # accident detection
 
 def accident_detection(request):
@@ -1097,3 +1133,53 @@ def chat_view_and(request):
         l.append({'id':res.id,'from':res.FROM_ID.id,'to':res.TO_ID.id,'msg':res.message,'date':res.date})
 
     return JsonResponse({'status':"ok",'data':l})
+
+
+# ============ forgot password
+
+def user_Forgot_password(request):
+    email=request.POST['email']
+    us=User.objects.filter(email=email)
+    if us.exists():
+        try:
+            # lg = User.objects.get(email=email)
+            bb = User.objects.get(email=email)
+            password = random.randint(00000000, 99999999)
+            bb.set_password(str(password))
+            bb.save()
+
+            sender_email = "vaishnavtj2005@gmail.com"
+            sender_password = "wbzw jaky wqmi zqkw"
+            subject = "Forget Password From SignSpeak"
+
+            body = f"Your New Password Is ({password}).Please Change Password After Login."
+
+            msg = MIMEMultipart()
+
+            msg['From'] = sender_email
+
+            msg['To'] = email
+
+            msg['Subject'] = subject
+
+            msg.attach(MIMEText(body, 'plain'))
+
+            server = smtplib.SMTP(host="smtp.gmail.com", port=587)
+
+            server.starttls()
+
+            server.login(sender_email, sender_password)
+
+            server.sendmail(sender_email, email, msg.as_string())
+
+            server.quit()
+
+            print(f"Email sent successfully to {email}")
+            return JsonResponse({"status": "ok"})
+
+        except Exception as e:
+
+            print(f"Error sending email: {e}")
+            return JsonResponse({"status": "no"})
+    else:
+        return JsonResponse({"status":"no"})

@@ -59,6 +59,7 @@ urlpatterns = [
     path('accident_detection/', views.accident_detection, name='accident_detection'),
     path('online_update_status/', views.online_update_status, name='online_update_status'),
     path('offline_update_status/', views.offline_update_status, name='offline_update_status'),
+    path('update_location/', views.update_location, name='update_location'),
 
 
 
@@ -76,5 +77,10 @@ urlpatterns = [
 #     flutter chat
     path('chat_send/', views.chat_send, name='chat_send'),
     path('chat_view_and/', views.chat_view_and, name='chat_view_and'),
+
+    path('user_change_password_post/', views.user_change_password_post, name='user_change_password_post'),
+    path('amb_change_password_post/', views.amb_change_password_post, name='amb_change_password_post'),
+
+    path('user_Forgot_password/', views.user_Forgot_password, name='user_Forgot_password'),
 
 ]
